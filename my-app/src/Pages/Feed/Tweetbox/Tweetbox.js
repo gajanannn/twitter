@@ -41,7 +41,7 @@ const Tweetbox = () => {
   const handletweet = (e) => {
     e.preventDefault();
     if (user?.provideData[0]?.providerId === "password") {
-      fetch(`http://localhost:5000/loggedinuser?email=${email}`)
+      fetch(`https://twitter-ot3r.onrender.com/loggedinuser?email=${email}`)
         .then((res) => res.json())
         .then((data) => {
           setname(data[0]?.name);
@@ -63,7 +63,7 @@ const Tweetbox = () => {
       };
       setpost("");
       setimageurl("");
-      fetch("http://localhost:5000/post", {
+      fetch("https://twitter-ot3r.onrender.com/post", {
         method: "POST",
         headers: {
           "content-type": "application/json",

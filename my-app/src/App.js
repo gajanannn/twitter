@@ -12,6 +12,7 @@ import ProtectedRoute from "./Pages/ProtectedRoute";
 import Profile from "./Pages/Profile/Profile";
 import More from "./Pages/More/More";
 import Bookmark from "./Pages/Bookmark/Bookmark";
+import Location from "./Pages/Map/Location";
 import React from "react";
 import { UserAuthContextProvider } from "./context/Userauthcontext";
 
@@ -45,6 +46,7 @@ function App() {
           <Route path="/home" element={<Home />}>
             <Route path="feed" element={<Feed />} />
             <Route path="explore" element={<Explore />} />
+            <Route path="location" element={<Location />} />
             <Route path="notification" element={<Notification />} />
             <Route path="messages" element={<Messages />} />
             <Route path="lists" element={<Lists />} />

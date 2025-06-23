@@ -79,7 +79,7 @@ const Editprofile = (user, loggedinuser) => {
       website,
       dob,
     };
-    fetch(`http://localhost:5000/userupdate/${user?.email}`, {
+    fetch(`https://twitter-ot3r.onrender.com/userupdate/${user?.email}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",

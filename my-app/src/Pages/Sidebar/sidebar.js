@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import TwitterIcon from "@mui/icons-material/Twitter";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
@@ -14,6 +15,7 @@ import Divider from "@mui/material/Divider";
 import DoneIcon from "@mui/icons-material/Done";
 import Button from "@mui/material/Button";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { Avatar } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
@@ -28,7 +30,6 @@ const Sidebar = ({ handlelogout, user }) => {
   const openmenu = Boolean(anchorE1);
   const [loggedinuser] = useLoggedinuser();
   const navigate = useNavigate();
-  console.log(loggedinuser);
   const handleClick = (e) => {
     setanchorE1(e.currentTarget);
   };
@@ -46,8 +47,12 @@ const Sidebar = ({ handlelogout, user }) => {
       <CustomLink to="/home/feed">
         <SidebarOption active Icon={HomeIcon} text="Home" />
       </CustomLink>
+
       <CustomLink to="/home/explore">
         <SidebarOption Icon={SearchIcon} text="Explore" />
+      </CustomLink>
+      <CustomLink to="/home/location">
+        <SidebarOption Icon={LocationOnOutlinedIcon} text="Location" />
       </CustomLink>
       <CustomLink to="/home/notifications">
         <SidebarOption Icon={NotificationsNoneIcon} text="Notifications" />
