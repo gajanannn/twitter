@@ -8,18 +8,17 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 import { auth } from "./firebase";
 
-// ✅ Context must be capitalized
 const UserAuthContext = createContext();
 
-// ✅ Component function name must start with a capital letter
 export function UserAuthContextProvider({ children }) {
   const [user, Setuser] = useState([]);
+  const [notificationEnabled, SetnotificationEnabled] = useState(true);
 
-  // ✅ Correct function names
   function login(email, password) {
     return signInWithEmailAndPassword(auth, email, password);
   }
@@ -31,12 +30,15 @@ export function UserAuthContextProvider({ children }) {
     return signOut(auth);
   }
 
+  function resetPassword(email) {
+    return sendPasswordResetEmail(auth, email);
+  }
+
   function googleSignIn() {
-    const provider = new GoogleAuthProvider(); // ✅ Fixed variable name conflict
+    const provider = new GoogleAuthProvider();
     return signInWithPopup(auth, provider);
   }
 
-  // ✅ Valid usage of useEffect in a React Component
   useEffect(() => {
     const Unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       console.log("Auth", currentUser);
@@ -48,14 +50,22 @@ export function UserAuthContextProvider({ children }) {
 
   return (
     <UserAuthContext.Provider
-      value={{ user, login, signin, logout, googleSignIn }}
+      value={{
+        user,
+        login,
+        signin,
+        logout,
+        googleSignIn,
+        resetPassword,
+        notificationEnabled,
+        SetnotificationEnabled,
+      }}
     >
       {children}
     </UserAuthContext.Provider>
   );
 }
 
-// ✅ Custom hook must start with "use"
 export function useUserAuth() {
   return useContext(UserAuthContext);
 }

@@ -4,6 +4,7 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import GoogleButton from "react-google-button";
 import twitterimg from "../../assets/twitterimg.png";
 import { useUserAuth } from "../../context/Userauthcontext";
+import Popup from "./Password/Popup";
 
 const Signup = () => {
   const [username, setusername] = useState("");
@@ -11,15 +12,31 @@ const Signup = () => {
   const [email, setemail] = useState("");
   const [error, seterror] = useState("");
   const [password, setpassword] = useState("");
-  const { Signin } = useUserAuth();
-  const { googlesignin } = useUserAuth();
+  const { signin } = useUserAuth();
+  const { googleSignIn } = useUserAuth();
   const navigate = useNavigate();
+  const [popup, setpopup] = useState(false);
+  const [generatedPassword, setGeneratedPassword] = useState("");
+
+  const generatePassword = () => {
+    let password = "";
+    const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const random = 10 + Math.floor(Math.random() * 11); // random length from 10 to 20
+    const randomChar = () => Math.floor(52 * Math.random());
+
+    for (let i = 0; i < random; i++) {
+      password += letters[randomChar()];
+    }
+
+    setGeneratedPassword(password);
+    setpopup(true);
+  };
 
   const handlesubmit = async (e) => {
     e.preventDefault();
     seterror("");
     try {
-      await Signin(email, password);
+      await signin(email, password);
       const user = {
         username,
         name,
@@ -49,7 +66,7 @@ const Signup = () => {
   const handlegooglesignin = async (e) => {
     e.preventDefault();
     try {
-      await googlesignin();
+      await googleSignIn();
       navigate("/");
     } catch (error) {
       console.log(error.message);
@@ -89,6 +106,16 @@ const Signup = () => {
               placeholder="Password"
               onChange={(e) => setpassword(e.target.value)}
             />
+            <button type="button" onClick={generatePassword} className="btn">
+              Generate password
+            </button>
+            {popup && (
+              <Popup
+                password={generatedPassword}
+                onClose={() => setpopup(false)}
+              />
+            )}
+
             <button type="submit" className="btn">
               Sign up
             </button>

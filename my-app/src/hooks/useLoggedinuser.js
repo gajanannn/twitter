@@ -12,7 +12,7 @@ const useLoggedinuser = () => {
       .then((data) => {
         setloggedinuser(data);
       });
-  }, [email, loggedinuser]);
+  }, [email]);
   return [loggedinuser, setloggedinuser];
 };
 

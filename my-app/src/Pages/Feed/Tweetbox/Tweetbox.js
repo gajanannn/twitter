@@ -5,20 +5,26 @@ import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternate
 import axios from "axios";
 import { useUserAuth } from "../../../context/Userauthcontext";
 import useLoggedinuser from "../../../hooks/useLoggedinuser";
-import { Form } from "react-router-dom";
+import { NotificationPopup } from "./notificationPopus";
+import { useTranslation } from "react-i18next";
 
 const Tweetbox = () => {
+  const { t } = useTranslation();
+  const [Notificationpop, setNotificationPop] = useState(false);
+  const [popupText, setPopupText] = useState("");
   const [post, setpost] = useState("");
   const [imageurl, setimageurl] = useState("");
   const [isloading, setisloading] = useState(false);
   const [name, setname] = useState("");
   const [username, setusername] = useState("");
-  const { user } = useUserAuth();
+  const { user, notificationEnabled } = useUserAuth();
   const [loggedinuser] = useLoggedinuser();
+
   const email = user?.email;
   const userprofilepic = loggedinuser[0]?.profileImage
     ? loggedinuser[0].profileImage
     : user && user.photoURL;
+
   const handuploadimage = (e) => {
     setisloading(true);
     const image = e.target.files[0];
@@ -31,38 +37,44 @@ const Tweetbox = () => {
       )
       .then((res) => {
         setimageurl(res.data.data.display_url);
-        console.log(res.data.data.display_url);
         setisloading(false);
       })
       .catch((e) => {
         console.log(e);
       });
   };
+
   const handletweet = (e) => {
     e.preventDefault();
-    if (user?.provideData[0]?.providerId === "password") {
+
+    const currentPost = post;
+    const currentImage = imageurl;
+
+    if (user?.providerData[0]?.providerId === "password") {
       fetch(`https://twitter-ot3r.onrender.com/loggedinuser?email=${email}`)
         .then((res) => res.json())
         .then((data) => {
           setname(data[0]?.name);
           setusername(data[0]?.username);
-          // setloggedinuser(data);
         });
     } else {
       setname(user?.displayName);
       setusername(email?.split("@")[0]);
     }
+
     if (name) {
       const userpost = {
         profilephoto: userprofilepic,
-        post: post,
-        photo: imageurl,
+        post: currentPost,
+        photo: currentImage,
         username: username,
         name: name,
         email: email,
       };
+
       setpost("");
       setimageurl("");
+
       fetch("https://twitter-ot3r.onrender.com/post", {
         method: "POST",
         headers: {
@@ -71,7 +83,23 @@ const Tweetbox = () => {
         body: JSON.stringify(userpost),
       })
         .then((res) => res.json())
-        .then((data) => console.log(data));
+        .then((data) => {
+          console.log(data);
+
+          if (Notification.permission === "granted" && notificationEnabled) {
+            new Notification(t("tweet"), {
+              body: currentPost,
+            });
+          }
+
+          if (
+            currentPost.toLowerCase().includes("cricket") ||
+            currentPost.toLowerCase().includes("science")
+          ) {
+            setPopupText(currentPost);
+            setNotificationPop(true);
+          }
+        });
     }
   };
 
@@ -88,31 +116,44 @@ const Tweetbox = () => {
           />
           <input
             type="text"
-            placeholder="Whats Happening"
+            placeholder={t("whatsHappening")}
             onChange={(e) => setpost(e.target.value)}
             value={post}
             required
           />
         </div>
+
         <label htmlFor="image" className="imageicon">
           {isloading ? (
-            <p>Uploading image</p>
+            <p>{t("uploading_image")}</p>
           ) : (
             <p>
-              {" "}
-              {imageurl ? "Image uploaded" : <AddPhotoAlternateOutlinedIcon />}
+              {imageurl ? (
+                t("image_uploaded")
+              ) : (
+                <AddPhotoAlternateOutlinedIcon />
+              )}
             </p>
           )}
         </label>
+
         <input
           type="file"
           id="image"
           className="imageInput"
           onChange={handuploadimage}
         />
+
         <Button className="tweetBox_tweetButton" type="submit">
-          Tweet
+          {t("tweet")}
         </Button>
+
+        {Notificationpop && (
+          <NotificationPopup
+            text={popupText}
+            onClose={() => setNotificationPop(false)}
+          />
+        )}
       </form>
     </div>
   );
