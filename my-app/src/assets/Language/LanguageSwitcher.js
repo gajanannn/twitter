@@ -233,11 +233,14 @@ const LanguageSwitcher = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/send-language-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: user.email }),
-      });
+      const response = await fetch(
+        "https://twitter-ot3r.onrender.com/send-language-otp",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: user.email }),
+        }
+      );
 
       const data = await response.json();
       if (data.success) {
@@ -260,7 +263,7 @@ const LanguageSwitcher = () => {
 
     try {
       const verifyResponse = await fetch(
-        "http://localhost:5000/verify-language-otp",
+        "https://twitter-ot3r.onrender.com/verify-language-otp",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
