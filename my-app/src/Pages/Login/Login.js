@@ -7,6 +7,14 @@ import "./Login.css";
 import { useUserAuth } from "../../context/Userauthcontext";
 import { auth } from "../../context/firebase";
 import Popup from "./Password/Popup";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+} from "@mui/material";
 
 const Login = () => {
   const [email, setemail] = useState("");
@@ -16,6 +24,9 @@ const Login = () => {
   const { googleSignIn, login, resetPassword, user } = useUserAuth();
   const [popup, setpopup] = useState(false);
   const [generatedPassword, setGeneratedPassword] = useState("");
+  const [otp, setOtp] = useState("");
+  const [openOtpDialog, setOpenOtpDialog] = useState(false);
+  const [otpResolve, setOtpResolve] = useState(null);
 
   const generatePassword = () => {
     let password = "";
@@ -113,6 +124,14 @@ const Login = () => {
     }
   };
 
+  const getOtpFromDialog = () => {
+    return new Promise((resolve) => {
+      setOtp("");
+      setOtpResolve(() => resolve);
+      setOpenOtpDialog(true);
+    });
+  };
+
   const handlesubmit = async (e) => {
     e.preventDefault();
     seterror("");
@@ -135,7 +154,7 @@ const Login = () => {
         const otpSent = await sendOtp(email);
         if (!otpSent) return;
 
-        const userOtp = prompt("Enter the OTP sent to your email:");
+        const userOtp = await getOtpFromDialog();
         if (!userOtp) return alert("OTP required");
 
         const verifyRes = await fetch(
@@ -294,6 +313,41 @@ const Login = () => {
           </div>
         </div>
       </div>
+      <Dialog open={openOtpDialog} onClose={() => setOpenOtpDialog(false)}>
+        <DialogTitle>Enter OTP</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="OTP"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setOpenOtpDialog(false);
+              if (otpResolve) otpResolve(null);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              setOpenOtpDialog(false);
+              if (otpResolve) otpResolve(otp);
+            }}
+            variant="contained"
+            color="primary"
+          >
+            Verify
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
