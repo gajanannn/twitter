@@ -6,7 +6,6 @@ import twitterimg from "../../assets/twitterimg.png";
 import "./Login.css";
 import { useUserAuth } from "../../context/Userauthcontext";
 import { auth } from "../../context/firebase";
-import Popup from "./Password/Popup";
 
 const Login = () => {
   const [email, setemail] = useState("");
@@ -14,22 +13,6 @@ const Login = () => {
   const [error, seterror] = useState("");
   const navigate = useNavigate();
   const { googleSignIn, login, resetPassword, user } = useUserAuth();
-  const [popup, setpopup] = useState(false);
-  const [generatedPassword, setGeneratedPassword] = useState("");
-
-  const generatePassword = () => {
-    let password = "";
-    const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const random = 10 + Math.floor(Math.random() * 11); // random length from 10 to 20
-    const randomChar = () => Math.floor(52 * Math.random());
-
-    for (let i = 0; i < random; i++) {
-      password += letters[randomChar()];
-    }
-
-    setGeneratedPassword(password);
-    setpopup(true);
-  };
 
   const sendOtp = async (targetEmail) => {
     if (!targetEmail || !targetEmail.includes("@")) {
@@ -241,22 +224,6 @@ const Login = () => {
                 placeholder="Password"
                 onChange={(e) => setpassword(e.target.value)}
               />
-              {/* ✅ Generate Password Button */}
-              <div className="btn-login">
-                <button
-                  type="button"
-                  onClick={generatePassword}
-                  className="btn"
-                >
-                  Generate password
-                </button>
-              </div>
-              {popup && (
-                <Popup
-                  password={generatedPassword}
-                  onClose={() => setpopup(false)}
-                />
-              )}
 
               <div className="btn-login">
                 <button type="submit" className="btn">

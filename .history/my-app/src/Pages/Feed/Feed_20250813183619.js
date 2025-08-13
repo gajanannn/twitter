@@ -19,9 +19,7 @@ const Feed = () => {
   };
 
   useEffect(() => {
-    fetchPosts(); // initial fetch
-    const intervalId = setInterval(fetchPosts, 3000); // fetch every 3s
-    return () => clearInterval(intervalId); // cleanup
+    fetchPosts();
   }, []);
 
   return (
@@ -29,7 +27,8 @@ const Feed = () => {
       <div className="feed_header">
         <h2>Home</h2>
       </div>
-      <Tweetbox />
+      {/* Pass fetchPosts to Tweetbox so it can trigger refresh */}
+      <Tweetbox onPostAdded={fetchPosts} />
       {post.map((p) => (
         <Posts key={p._id} p={p} />
       ))}

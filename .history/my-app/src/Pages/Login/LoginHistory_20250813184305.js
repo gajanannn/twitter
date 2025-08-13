@@ -56,7 +56,6 @@ const LoginHistory = () => {
                 <td style={{ padding: "6px 8px" }}>{entry.browser}</td>
                 <td style={{ padding: "6px 8px" }}>{entry.os}</td>
                 <td style={{ padding: "6px 8px" }}>{entry.device}</td>
-                <td style={{ padding: "6px 8px" }}>{entry.ip || "N/A"}</td>
                 <td style={{ padding: "6px 8px", whiteSpace: "nowrap" }}>
                   {new Date(entry.loginTime).toLocaleDateString()}
                 </td>

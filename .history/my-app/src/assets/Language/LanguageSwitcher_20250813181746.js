@@ -193,15 +193,7 @@
 // export default LanguageSwitcher;
 
 import React, { useEffect, useState } from "react";
-import {
-  MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField,
-} from "@mui/material";
+import { MenuItem } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useUserAuth } from "../../context/Userauthcontext";
 
@@ -211,8 +203,8 @@ const LanguageSwitcher = () => {
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [canChangeLang, setCanChangeLang] = useState(false);
+  const [awaitingOtp, setAwaitingOtp] = useState(false);
   const [otp, setOtp] = useState("");
-  const [openOtpDialog, setOpenOtpDialog] = useState(false);
 
   useEffect(() => {
     const flag = localStorage.getItem("lang_verified_time");
@@ -242,7 +234,7 @@ const LanguageSwitcher = () => {
       const data = await response.json();
       if (data.success) {
         alert("OTP sent to your email.");
-        setOpenOtpDialog(true); // open modal for OTP input
+        setAwaitingOtp(true); // Show OTP input field
       } else {
         alert("Failed to send OTP: " + data.message);
       }
@@ -270,13 +262,11 @@ const LanguageSwitcher = () => {
 
       const verifyData = await verifyResponse.json();
       if (verifyData.success) {
-        alert(
-          "OTP verified successfully. You may now change the language using the dropdown menu below the 'Change Language' button."
-        );
+        alert("OTP verified successfully. You may now change the language.");
         localStorage.setItem("lang_verified_time", Date.now().toString());
         setCanChangeLang(true);
         setShowDropdown(true);
-        setOpenOtpDialog(false);
+        setAwaitingOtp(false);
         setOtp("");
       } else {
         alert("OTP verification failed: " + verifyData.message);
@@ -296,8 +286,26 @@ const LanguageSwitcher = () => {
     <div>
       <MenuItem onClick={handleRequest}>{t("change_language")}</MenuItem>
 
+      {awaitingOtp && (
+        <div style={{ marginTop: "10px" }}>
+          <input
+            type="text"
+            placeholder="Enter OTP"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+          />
+          <button onClick={verifyOtp} style={{ marginLeft: "8px" }}>
+            Verify OTP
+          </button>
+        </div>
+      )}
+
       {canChangeLang && showDropdown && (
-        <select onChange={changeLanguage} defaultValue={i18n.language}>
+        <select
+          onChange={changeLanguage}
+          defaultValue={i18n.language}
+          style={{ marginTop: "10px" }}
+        >
           <option value="en">English</option>
           <option value="hi">Hindi</option>
           <option value="fr">Français</option>
@@ -306,29 +314,6 @@ const LanguageSwitcher = () => {
           <option value="zh">中文</option>
         </select>
       )}
-
-      {/* OTP Dialog */}
-      <Dialog open={openOtpDialog} onClose={() => setOpenOtpDialog(false)}>
-        <DialogTitle>Enter OTP</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="OTP"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenOtpDialog(false)}>Cancel</Button>
-          <Button onClick={verifyOtp} variant="contained" color="primary">
-            Verify
-          </Button>
-        </DialogActions>
-      </Dialog>
     </div>
   );
 };

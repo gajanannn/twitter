@@ -42,9 +42,6 @@ const LoginHistory = () => {
               <th style={{ textAlign: "left", padding: "6px 8px" }}>Browser</th>
               <th style={{ textAlign: "left", padding: "6px 8px" }}>OS</th>
               <th style={{ textAlign: "left", padding: "6px 8px" }}>Device</th>
-              <th style={{ textAlign: "left", padding: "6px 8px" }}>
-                IP Address
-              </th>
               <th style={{ textAlign: "left", padding: "6px 8px" }}>Date</th>
               <th style={{ textAlign: "left", padding: "6px 8px" }}>Time</th>
             </tr>
@@ -56,7 +53,6 @@ const LoginHistory = () => {
                 <td style={{ padding: "6px 8px" }}>{entry.browser}</td>
                 <td style={{ padding: "6px 8px" }}>{entry.os}</td>
                 <td style={{ padding: "6px 8px" }}>{entry.device}</td>
-                <td style={{ padding: "6px 8px" }}>{entry.ip || "N/A"}</td>
                 <td style={{ padding: "6px 8px", whiteSpace: "nowrap" }}>
                   {new Date(entry.loginTime).toLocaleDateString()}
                 </td>

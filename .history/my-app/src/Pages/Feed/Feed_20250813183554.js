@@ -1,10 +1,12 @@
 //
 
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Posts from "./Posts/Posts";
 import Tweetbox from "./Tweetbox/Tweetbox";
 
 const Feed = () => {
+  const { t } = useTranslation();
   const [post, setPost] = useState([]);
 
   const fetchPosts = () => {
@@ -19,17 +21,16 @@ const Feed = () => {
   };
 
   useEffect(() => {
-    fetchPosts(); // initial fetch
-    const intervalId = setInterval(fetchPosts, 3000); // fetch every 3s
-    return () => clearInterval(intervalId); // cleanup
+    fetchPosts();
   }, []);
 
   return (
     <div className="feed">
       <div className="feed_header">
-        <h2>Home</h2>
+        <h2>{t("home")}</h2>
       </div>
-      <Tweetbox />
+      {/* Pass fetchPosts to Tweetbox so it can trigger refresh */}
+      <Tweetbox onPostAdded={fetchPosts} />
       {post.map((p) => (
         <Posts key={p._id} p={p} />
       ))}

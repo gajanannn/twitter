@@ -270,9 +270,7 @@ const LanguageSwitcher = () => {
 
       const verifyData = await verifyResponse.json();
       if (verifyData.success) {
-        alert(
-          "OTP verified successfully. You may now change the language using the dropdown menu below the 'Change Language' button."
-        );
+        alert("OTP verified successfully. You may now change the language.");
         localStorage.setItem("lang_verified_time", Date.now().toString());
         setCanChangeLang(true);
         setShowDropdown(true);

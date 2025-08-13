@@ -6,7 +6,7 @@ import twitterimg from "../../assets/twitterimg.png";
 import "./Login.css";
 import { useUserAuth } from "../../context/Userauthcontext";
 import { auth } from "../../context/firebase";
-import Popup from "./Password/Popup";
+import Popup from "../Signup/Password/Popup";
 
 const Login = () => {
   const [email, setemail] = useState("");

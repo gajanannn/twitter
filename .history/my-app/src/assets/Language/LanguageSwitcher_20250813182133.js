@@ -270,9 +270,7 @@ const LanguageSwitcher = () => {
 
       const verifyData = await verifyResponse.json();
       if (verifyData.success) {
-        alert(
-          "OTP verified successfully. You may now change the language using the dropdown menu below the 'Change Language' button."
-        );
+        alert("OTP verified successfully. You may now change the language.");
         localStorage.setItem("lang_verified_time", Date.now().toString());
         setCanChangeLang(true);
         setShowDropdown(true);
@@ -297,7 +295,11 @@ const LanguageSwitcher = () => {
       <MenuItem onClick={handleRequest}>{t("change_language")}</MenuItem>
 
       {canChangeLang && showDropdown && (
-        <select onChange={changeLanguage} defaultValue={i18n.language}>
+        <select
+          onChange={changeLanguage}
+          defaultValue={i18n.language}
+          style={{ marginTop: "10px" }}
+        >
           <option value="en">English</option>
           <option value="hi">Hindi</option>
           <option value="fr">Français</option>
